@@ -69,7 +69,7 @@ public class MealUserInput {
                     return category;
                 }
             }
-            System.out.println("What would you like to do (add, show, exit)?");
+            System.out.println("Wrong meal category! Choose from: breakfast, lunch, dinner.");
         }
     }
 }
