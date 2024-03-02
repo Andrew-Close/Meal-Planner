@@ -1,6 +1,6 @@
 type: edu
 files:
-  - name: src/mealplanner/Main.java
+  - name: src/mealplanner/main/Main.java
     visible: true
     text: |-
       package mealplanner;
@@ -326,6 +326,15 @@ files:
         }
       }
     learner_created: false
-feedback_link: https://hyperskill.org/projects/318/stages/1784/implement#comment
+  - name: src/mealplanner/meal/Meal.java
+    visible: true
+    learner_created: true
+  - name: src/mealplanner/userinput/UserInput.java
+    visible: true
+    learner_created: true
+  - name: src/mealplanner/main/MealUserInput.java
+    visible: true
+    learner_created: true
+feedback_link: https://hyperskill.org/learn/step/25572#comment
 status: Unchecked
 record: -1

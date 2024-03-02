@@ -220,9 +220,9 @@ files:
           implementation 'org.postgresql:postgresql:42.2.27'
       }
     learner_created: false
-feedback_link: https://hyperskill.org/projects/318/stages/1783/implement#comment
+feedback_link: https://hyperskill.org/learn/step/25571#comment
 status: Solved
 feedback:
   message: Congratulations!
   time: "Sat, 02 Mar 2024 02:20:16 UTC"
-record: -1
+record: 1
