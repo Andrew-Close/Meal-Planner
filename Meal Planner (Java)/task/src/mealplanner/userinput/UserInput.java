@@ -4,6 +4,9 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class is a general purpose class for getting user input. Methods can be customized with custom error messages
+ */
 public class UserInput {
     private static final Scanner scanner = new Scanner(System.in);
 
