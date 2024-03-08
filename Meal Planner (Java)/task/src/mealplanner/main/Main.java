@@ -3,13 +3,52 @@ package mealplanner.main;
 import mealplanner.meal.Meal;
 import mealplanner.userinput.UserInput;
 
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import org.postgresql.ds.PGSimpleDataSource;
+
+import javax.sql.DataSource;
 
 public class Main {
   // Contains all saved meals
   static final ArrayList<Meal> savedMeals = new ArrayList<>();
+  static final Scanner scanner = new Scanner(System.in);
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException {
+    /*
+    All of this is a test for connecting with the database and sending queries to it. None of this relates to the actual task, it's just a test for learning how to do things.
+     */
+    String DB_URL = "jdbc:postgresql:meals_db";
+    String USER = "postgres";
+    String PASS = "1111";
+
+    PGSimpleDataSource dataSource = new PGSimpleDataSource();
+    dataSource.setURL(DB_URL);
+    dataSource.setUser(USER);
+    dataSource.setPassword(PASS);
+    try (Connection connection = dataSource.getConnection(USER, PASS)) {
+      String statement = "INSERT INTO test_table VALUES(?, ?)";
+      try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+        preparedStatement.setString(1, scanner.nextLine());
+        preparedStatement.setInt(2, scanner.nextInt());
+        preparedStatement.executeUpdate();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+      String selection = "SELECT * FROM test_table";
+      try (PreparedStatement preparedStatement = connection.prepareStatement(selection)) {
+        ResultSet result = preparedStatement.executeQuery();
+        while (result.next()) {
+          System.out.printf("name: %s%n", result.getString("name"));
+          System.out.printf("id: %d%n%n", result.getInt("id"));
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
     // The user input loop
     inputLoop();
   }
