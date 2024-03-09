@@ -745,6 +745,17 @@ feedback:
   message: |-
     Wrong answer in test #1
 
-    Your program should ask the user about the required action: &quot;(add, show, exit)?&quot;
-  time: "Fri, 08 Mar 2024 22:43:51 UTC"
+    The table &quot;ingredients&quot; doesn&#39;t exist.
+
+    Please find below the output of your program during this failed test.
+
+    ---
+
+    stdout:
+    What would you like to do (add, show, exit)?
+
+    stderr:
+    org.postgresql.util.PSQLException: ERROR: relation &quot;meals&quot; does not exist
+      Position: 15
+  time: "Sat, 09 Mar 2024 19:42:22 UTC"
 record: -1

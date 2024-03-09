@@ -1,10 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="MealPlannerTests" tests="1" skipped="0" failures="1" errors="0" timestamp="2024-03-08T22:43:50" hostname="ACLOSECUSTOMPC" time="0.429">
+<testsuite name="MealPlannerTests" tests="1" skipped="0" failures="1" errors="0" timestamp="2024-03-09T19:42:21" hostname="ACLOSECUSTOMPC" time="0.621">
   <properties/>
-  <testcase name="start" classname="MealPlannerTests" time="0.429">
-    <failure message="java.lang.AssertionError: Wrong answer in test #1&#10;&#10;Your program should ask the user about the required action: &quot;(add, show, exit)?&quot;" type="java.lang.AssertionError">java.lang.AssertionError: Wrong answer in test #1
+  <testcase name="start" classname="MealPlannerTests" time="0.621">
+    <failure message="java.lang.AssertionError: Wrong answer in test #1&#10;&#10;The table &quot;ingredients&quot; doesn't exist.&#10;&#10;Please find below the output of your program during this failed test.&#10;&#10;---&#10;&#10;stdout:&#10;What would you like to do (add, show, exit)?&#10;&#10;stderr:&#10;org.postgresql.util.PSQLException: ERROR: relation &quot;meals&quot; does not exist&#10;  Position: 15&#10;&#9;at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)&#10;&#9;at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2412)&#10;&#9;at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:371)&#10;&#9;at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:502)&#10;&#9;at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:419)&#10;&#9;at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194)&#10;&#9;at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:137)&#10;&#9;at mealplanner.meal.datamanager.DataManager.getMessage(DataManager.java:76)&#10;&#9;at mealplanner.main.Main.main(Main.java:15)&#10;&#9;at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)&#10;&#9;at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)&#10;&#9;at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)&#10;&#9;at java.base/java.lang.reflect.Method.invoke(Method.java:568)&#10;&#9;at org.hyperskill.hstest.testing.execution.MainMethodExecutor.invokeMain(MainMethodExecutor.java:160)&#10;&#9;at org.hyperskill.hstest.testing.execution.MainMethodExecutor.lambda$launch$1(MainMethodExecutor.java:188)&#10;&#9;at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)&#10;&#9;at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)&#10;&#9;at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)&#10;&#9;at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)&#10;&#9;at java.base/java.lang.Thread.run(Thread.java:840)&#10;org.postgresql.util.PSQLException: ERROR: relation &quot;meals&quot; does not exist&#10;  Position: 15&#10;&#9;at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)&#10;&#9;at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2412)&#10;&#9;at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:371)&#10;&#9;at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:502)&#10;&#9;at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:419)&#10;&#9;at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194)&#10;&#9;at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:137)&#10;&#9;at mealplanner.meal.datamanager.DataManager.getMessage(DataManager.java:76)&#10;&#9;at mealplanner.main.Main.inputLoop(Main.java:27)&#10;&#9;at mealplanner.main.Main.main(Main.java:17)&#10;&#9;at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)&#10;&#9;at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)&#10;&#9;at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)&#10;&#9;at java.base/java.lang.reflect.Method.invoke(Method.java:568)&#10;&#9;at org.hyperskill.hstest.testing.execution.MainMethodExecutor.invokeMain(MainMethodExecutor.java:160)&#10;&#9;at org.hyperskill.hstest.testing.execution.MainMethodExecutor.lambda$launch$1(MainMethodExecutor.java:188)&#10;&#9;at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)&#10;&#9;at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)&#10;&#9;at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)&#10;&#9;at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)&#10;&#9;at java.base/java.lang.Thread.run(Thread.java:840)" type="java.lang.AssertionError">java.lang.AssertionError: Wrong answer in test #1
 
-Your program should ask the user about the required action: &quot;(add, show, exit)?&quot;
+The table &quot;ingredients&quot; doesn't exist.
+
+Please find below the output of your program during this failed test.
+
+---
+
+stdout:
+What would you like to do (add, show, exit)?
+
+stderr:
+org.postgresql.util.PSQLException: ERROR: relation &quot;meals&quot; does not exist
+  Position: 15
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2412)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:371)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:502)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:419)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:137)
+	at mealplanner.meal.datamanager.DataManager.getMessage(DataManager.java:76)
+	at mealplanner.main.Main.main(Main.java:15)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.hyperskill.hstest.testing.execution.MainMethodExecutor.invokeMain(MainMethodExecutor.java:160)
+	at org.hyperskill.hstest.testing.execution.MainMethodExecutor.lambda$launch$1(MainMethodExecutor.java:188)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+org.postgresql.util.PSQLException: ERROR: relation &quot;meals&quot; does not exist
+  Position: 15
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2412)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:371)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:502)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:419)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:137)
+	at mealplanner.meal.datamanager.DataManager.getMessage(DataManager.java:76)
+	at mealplanner.main.Main.inputLoop(Main.java:27)
+	at mealplanner.main.Main.main(Main.java:17)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.hyperskill.hstest.testing.execution.MainMethodExecutor.invokeMain(MainMethodExecutor.java:160)
+	at org.hyperskill.hstest.testing.execution.MainMethodExecutor.lambda$launch$1(MainMethodExecutor.java:188)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
 	at org.junit.Assert.fail(Assert.java:89)
 	at org.hyperskill.hstest.stage.StageTest.start(StageTest.java:203)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -54,6 +108,53 @@ Your program should ask the user about the required action: &quot;(add, show, ex
   </testcase>
   <system-out><![CDATA[?[1;31m
 Start test 1?[0m
+
+What would you like to do (add, show, exit)?
 ]]></system-out>
-  <system-err><![CDATA[]]></system-err>
+  <system-err><![CDATA[org.postgresql.util.PSQLException: ERROR: relation "meals" does not exist
+  Position: 15
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2412)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:371)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:502)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:419)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:137)
+	at mealplanner.meal.datamanager.DataManager.getMessage(DataManager.java:76)
+	at mealplanner.main.Main.main(Main.java:15)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.hyperskill.hstest.testing.execution.MainMethodExecutor.invokeMain(MainMethodExecutor.java:160)
+	at org.hyperskill.hstest.testing.execution.MainMethodExecutor.lambda$launch$1(MainMethodExecutor.java:188)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+org.postgresql.util.PSQLException: ERROR: relation "meals" does not exist
+  Position: 15
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2725)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2412)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:371)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:502)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:419)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:194)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:137)
+	at mealplanner.meal.datamanager.DataManager.getMessage(DataManager.java:76)
+	at mealplanner.main.Main.inputLoop(Main.java:27)
+	at mealplanner.main.Main.main(Main.java:17)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.hyperskill.hstest.testing.execution.MainMethodExecutor.invokeMain(MainMethodExecutor.java:160)
+	at org.hyperskill.hstest.testing.execution.MainMethodExecutor.lambda$launch$1(MainMethodExecutor.java:188)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+]]></system-err>
 </testsuite>

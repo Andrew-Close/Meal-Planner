@@ -4,17 +4,15 @@ import mealplanner.meal.Meal;
 import mealplanner.meal.datamanager.DataManager;
 import mealplanner.userinput.UserInput;
 
-import javax.xml.crypto.Data;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Main {
   // Contains all saved meals
   static final ArrayList<Meal> savedMeals = new ArrayList<>();
 
   public static void main(String[] args) throws SQLException {
+    System.out.println(DataManager.getMessage());
     // The user input loop
     inputLoop();
   }
@@ -26,6 +24,7 @@ public class Main {
     // The while loop uses this boolean as the condition, so when this boolean is set to false, the loop terminates
     boolean shouldContinue = true;
     while (shouldContinue) {
+      String message = DataManager.getMessage();
       System.out.println("What would you like to do (add, show, exit)?");
       String operation = MealUserInput.getValidOperation();
       switch (operation) {
@@ -33,7 +32,14 @@ public class Main {
           addMeal();
           break;
         case "show":
+          if (message.isEmpty()) {
+            System.out.println("No meals saved. Add a meal first.");
+          } else {
+            System.out.println(message);
+          }
+          /*
           showMeals();
+           */
           break;
         case "exit":
           shouldContinue = false;
@@ -52,10 +58,10 @@ public class Main {
     String name = UserInput.getAlphabeticalString("Wrong format. Use letters only!");
     System.out.println("Input the ingredients:");
     String[] ingredients = MealUserInput.getValidIngredients();
-    String mealID = Integer.toString(DataManager.nextMealID());
+    String mealID = Integer.toString(DataManager.getNextMealID());
     DataManager.insertInto(DataManager.Tables.MEALS, new String[]{category, name, mealID});
     for (String ingredient : ingredients) {
-      DataManager.insertInto(DataManager.Tables.INGREDIENTS, new String[]{ingredient, Integer.toString(DataManager.nextIngredientID()), mealID});
+      DataManager.insertInto(DataManager.Tables.INGREDIENTS, new String[]{ingredient, Integer.toString(DataManager.getNextIngredientID()), mealID});
     }
     System.out.println("The meal has been added!");
   }

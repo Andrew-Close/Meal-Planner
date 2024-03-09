@@ -18,9 +18,6 @@ public class DataManager {
         MEALS, INGREDIENTS
     }
 
-    private static int nextMealID = 1;
-    private static int nextIngredientID = 1;
-
     /**
      * Returns a ResultSet of all the columns from the specified table
      * @param table the name of the table which the user wishes to select data from
@@ -67,51 +64,41 @@ public class DataManager {
 
     /**
      * Prints out all data in the specified table. Data is parsed differently depending on the input table
-     * @param table the table which should be read from
-     * @throws SQLException;
      */
-    public static void printData(Tables table) throws SQLException {
+    public static String getMessage() {
+        StringBuilder message = new StringBuilder();
+        message.append("\n");
         try (Connection connection = connect()) {
-            // Branch for if the input table is the meals table
-            if (table.equals(Tables.MEALS)) {
-                String selection = "SELECT * FROM meals";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(selection)) {
-                    // Result of selection
-                    try (ResultSet data = preparedStatement.executeQuery()) {
-                        // Here is where the data gets printed out
-                        while (data.next()) {
-                            System.out.printf("Category: %s%n", data.getString("category"));
-                            System.out.printf("Name: %s%n", data.getString("meal"));
-                            System.out.printf("Id: %d%n", data.getInt("meal_id"));
+            String mealSelection = "SELECT * FROM meals";
+            String ingredientSelection = "SELECT * FROM ingredients WHERE meal_id = ? ORDER BY ingredient_id";
+            try (PreparedStatement mealStatement = connection.prepareStatement(mealSelection); PreparedStatement ingredientStatement = connection.prepareStatement(ingredientSelection)) {
+                // Result of meal selection
+                try (ResultSet mealData = mealStatement.executeQuery()) {
+                    while (mealData.next()) {
+                        message.append("Category: ").append(mealData.getString("category")).append("\n");
+                        message.append("Name: ").append(mealData.getString("meal")).append("\n");
+                        message.append("Ingredients: \n");
+                        ingredientStatement.setInt(1, mealData.getInt("meal_id"));
+                        try (ResultSet ingredientData = ingredientStatement.executeQuery()) {
+                            while (ingredientData.next()) {
+                                message.append(ingredientData.getString("ingredient")).append("\n");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
+                        message.append("\n");
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            // Branch for if the input table is the ingredients table
-            } else if (table.equals(Tables.INGREDIENTS)) {
-                String selection = "SELECT * FROM ingredients";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(selection)) {
-                    // Result of selection
-                    try (ResultSet data = preparedStatement.executeQuery()) {
-                        // Here is where the data gets printed out
-                        while (data.next()) {
-                            System.out.printf("Ingredient: %s%n", data.getString("ingredient"));
-                            System.out.printf("Ingredient_id: %s%n", data.getInt("ingredient_id"));
-                            System.out.printf("Id: %d%n", data.getInt("meal_id"));
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        message.delete(message.length() - 1, message.length());
+        return message.toString();
     }
 
     /**
@@ -150,14 +137,42 @@ public class DataManager {
         }
     }
 
-    public static int nextMealID() {
-        ++nextMealID;
-        return nextMealID - 1;
+    public static int getNextMealID() {
+        try (Connection connection = connect()) {
+            String selection = "SELECT MAX(meal_id) FROM meals";
+            try (PreparedStatement statement = connection.prepareStatement(selection)) {
+                try (ResultSet result = statement.executeQuery()) {
+                    result.next();
+                    return result.getInt("max") + 1;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
-    public static int nextIngredientID() {
-        ++nextIngredientID;
-        return nextIngredientID - 1;
+    public static int getNextIngredientID() {
+        try (Connection connection = connect()) {
+            String selection = "SELECT MAX(ingredient_id) FROM ingredients";
+            try (PreparedStatement statement = connection.prepareStatement(selection)) {
+                try (ResultSet result = statement.executeQuery()) {
+                    result.next();
+                    return result.getInt("max") + 1;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     /**
