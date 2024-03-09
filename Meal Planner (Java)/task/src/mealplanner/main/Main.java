@@ -4,16 +4,19 @@ import mealplanner.meal.Meal;
 import mealplanner.meal.datamanager.DataManager;
 import mealplanner.userinput.UserInput;
 
+import javax.xml.crypto.Data;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Main {
   // Contains all saved meals
   static final ArrayList<Meal> savedMeals = new ArrayList<>();
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException {
     // Testing the insertInto method
-    DataManager.insertInto(DataManager.Tables.MEALS, new String[]{"dinner", "steak", "3"});
-    DataManager.insertInto(DataManager.Tables.INGREDIENTS, new String[]{"a1 sauce", "2", "3"});
+    DataManager.printData(DataManager.Tables.MEALS);
+    DataManager.printData(DataManager.Tables.INGREDIENTS);
     // The user input loop
     inputLoop();
   }
