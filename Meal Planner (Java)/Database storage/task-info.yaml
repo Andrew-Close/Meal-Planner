@@ -736,6 +736,15 @@ files:
         }
       }
     learner_created: true
+  - name: src/mealplanner/meal/datamanager/DataManager.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/25573#comment
-status: Unchecked
+status: Failed
+feedback:
+  message: |-
+    Wrong answer in test #1
+
+    Your program should ask the user about the required action: &quot;(add, show, exit)?&quot;
+  time: "Fri, 08 Mar 2024 22:43:51 UTC"
 record: -1
