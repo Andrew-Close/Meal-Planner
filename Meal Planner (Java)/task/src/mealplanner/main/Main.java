@@ -8,15 +8,13 @@ import javax.xml.crypto.Data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
   // Contains all saved meals
   static final ArrayList<Meal> savedMeals = new ArrayList<>();
 
   public static void main(String[] args) throws SQLException {
-    // Testing the insertInto method
-    DataManager.printData(DataManager.Tables.MEALS);
-    DataManager.printData(DataManager.Tables.INGREDIENTS);
     // The user input loop
     inputLoop();
   }
@@ -54,7 +52,11 @@ public class Main {
     String name = UserInput.getAlphabeticalString("Wrong format. Use letters only!");
     System.out.println("Input the ingredients:");
     String[] ingredients = MealUserInput.getValidIngredients();
-    savedMeals.add(new Meal(category, name, ingredients));
+    String mealID = Integer.toString(DataManager.nextMealID());
+    DataManager.insertInto(DataManager.Tables.MEALS, new String[]{category, name, mealID});
+    for (String ingredient : ingredients) {
+      DataManager.insertInto(DataManager.Tables.INGREDIENTS, new String[]{ingredient, Integer.toString(DataManager.nextIngredientID()), mealID});
+    }
     System.out.println("The meal has been added!");
   }
 

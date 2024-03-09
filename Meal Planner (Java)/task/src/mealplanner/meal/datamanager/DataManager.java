@@ -18,11 +18,15 @@ public class DataManager {
         MEALS, INGREDIENTS
     }
 
+    private static int nextMealID = 1;
+    private static int nextIngredientID = 1;
+
     /**
      * Returns a ResultSet of all the columns from the specified table
      * @param table the name of the table which the user wishes to select data from
      * @return the ResultSet from the specified table
      */
+    @Deprecated
     public static ResultSet getAllColumns(Tables table) {
         try (Connection connection = connect()) {
             if (table.equals(Tables.MEALS)) {
@@ -144,6 +148,16 @@ public class DataManager {
         } catch (SQLException e) {
             e.getMessage();
         }
+    }
+
+    public static int nextMealID() {
+        ++nextMealID;
+        return nextMealID - 1;
+    }
+
+    public static int nextIngredientID() {
+        ++nextIngredientID;
+        return nextIngredientID - 1;
     }
 
     /**
