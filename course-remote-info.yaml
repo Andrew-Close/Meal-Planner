@@ -3,7 +3,7 @@ hyperskill_project:
   ide_files: https://cogniterra.org/media/attachments/lesson/27370/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: "Sat, 09 Mar 2024 15:38:05 UTC"
+update_date: "Tue, 19 Mar 2024 00:33:03 UTC"
 stages:
   - id: 1783
     step: 25571
@@ -66,6 +66,8 @@ topics:
   1:
     - title: Modulo division
       theory_id: 10586
+    - title: Data structures
+      theory_id: 40371
     - title: Abstract and concrete data structures
       theory_id: 16927
     - title: "Write, compile, and run"
@@ -122,6 +124,8 @@ topics:
       theory_id: 30143
     - title: Hash table
       theory_id: 13054
+    - title: Regexps in Java
+      theory_id: 3670
     - title: Introduction to generic programming
       theory_id: 3492
     - title: Generics and Object
@@ -138,6 +142,8 @@ topics:
       theory_id: 3575
     - title: The Map interface
       theory_id: 3558
+    - title: Regular expression
+      theory_id: 7580
     - title: Defining classes
       theory_id: 3618
     - title: Grouping classes with packages
@@ -177,24 +183,12 @@ topics:
     - title: Wrapping classes. Boxing
       theory_id: 3595
   2:
-    - title: Computer algorithms
-      theory_id: 16547
-    - title: "Big O: how to count it"
-      theory_id: 35901
-    - title: Complexity cases and how to use them
-      theory_id: 20084
     - title: "Basic terms: JVM, JRE, JDK"
       theory_id: 3499
     - title: Command line overview
       theory_id: 8977
     - title: Parameters and options
       theory_id: 9746
-    - title: Pseudocode
-      theory_id: 15090
-    - title: Pseudocode basics
-      theory_id: 19510
-    - title: Complex constructions in pseudocode
-      theory_id: 20922
     - title: Hierarchy of exceptions
       theory_id: 3570
     - title: Exception handling
@@ -209,6 +203,8 @@ topics:
       theory_id: 5077
     - title: Building apps using Gradle
       theory_id: 7917
+    - title: Gradle build configuration
+      theory_id: 35988
     - title: "Dependency management: repositories"
       theory_id: 37189
     - title: What are databases
