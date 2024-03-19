@@ -92,21 +92,23 @@ public class MealUserInput {
         while (true) {
             String userInputString = scanner.nextLine();
             // Checks the corner case of there being a comma at the end of the input
-            if (userInputString.substring(userInputString.length() - 2).matches(",|, ")) {
-                System.out.println("Wrong format. Use letters only!");
-            } else {
-                String[] userInput = userInputString.split(", ");
-                for (String ingredient : userInput) {
-                    Matcher lettersMatcher = lettersPattern.matcher(ingredient);
-                    Matcher emptyMatcher = emptyPattern.matcher(ingredient);
-                    // Checks each element in the split array rather than the entire inputted string
-                    if (lettersMatcher.find() || !emptyMatcher.find()) {
-                        System.out.println("Wrong format. Use letters only!");
-                        continue whileloop;
-                    }
+            if (userInputString.length() >= 2) {
+                if (userInputString.substring(userInputString.length() - 2).matches(",|, ")) {
+                    System.out.println("Wrong format. Use letters only!");
+                    continue;
                 }
-                return userInput;
             }
+            String[] userInput = userInputString.split(", ");
+            for (String ingredient : userInput) {
+                Matcher lettersMatcher = lettersPattern.matcher(ingredient);
+                Matcher emptyMatcher = emptyPattern.matcher(ingredient);
+                // Checks each element in the split array rather than the entire inputted string
+                if (lettersMatcher.find() || !emptyMatcher.find()) {
+                    System.out.println("Wrong format. Use letters only!");
+                    continue whileloop;
+                }
+            }
+            return userInput;
         }
     }
 }

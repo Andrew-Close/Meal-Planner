@@ -740,22 +740,8 @@ files:
     visible: true
     learner_created: true
 feedback_link: https://hyperskill.org/learn/step/25573#comment
-status: Failed
+status: Solved
 feedback:
-  message: |-
-    Wrong answer in test #1
-
-    The table &quot;ingredients&quot; doesn&#39;t exist.
-
-    Please find below the output of your program during this failed test.
-
-    ---
-
-    stdout:
-    What would you like to do (add, show, exit)?
-
-    stderr:
-    org.postgresql.util.PSQLException: ERROR: relation &quot;meals&quot; does not exist
-      Position: 15
-  time: "Sat, 09 Mar 2024 19:42:22 UTC"
+  message: Congratulations!
+  time: "Tue, 19 Mar 2024 01:27:11 UTC"
 record: -1

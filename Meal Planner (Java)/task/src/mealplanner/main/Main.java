@@ -12,7 +12,8 @@ public class Main {
   static final ArrayList<Meal> savedMeals = new ArrayList<>();
 
   public static void main(String[] args) throws SQLException {
-    System.out.println(DataManager.getMessage());
+    // Since the test gets rid of all tables at the start of execution, I need to initialize the tables if they don't already exist
+    DataManager.initializeTables();
     // The user input loop
     inputLoop();
   }

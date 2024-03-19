@@ -19,6 +19,30 @@ public class DataManager {
     }
 
     /**
+     * Initializes the required tables if they don't already exist at the beginning of the runtime
+     */
+    public static void initializeTables() {
+        try (Connection connection = connect()) {
+            String mealsTableCreation = "CREATE TABLE IF NOT EXISTS meals (" +
+                                            "category VARCHAR(9)," +
+                                            "meal VARCHAR(50)," +
+                                            "meal_id INTEGER" +
+                                        ")";
+            String ingredientsTableCreation = "CREATE TABLE IF NOT EXISTS ingredients (" +
+                                                    "ingredient VARCHAR(50)," +
+                                                    "ingredient_id INTEGER," +
+                                                    "meal_id INTEGER" +
+                                                ")";
+            try (PreparedStatement mealsTableStatement = connection.prepareStatement(mealsTableCreation); PreparedStatement ingredientsTableStatement = connection.prepareStatement(ingredientsTableCreation)) {
+                mealsTableStatement.execute();
+                ingredientsTableStatement.execute();
+            } catch (SQLException ignored) {
+            }
+        } catch (SQLException ignored) {
+        }
+    }
+
+    /**
      * Returns a ResultSet of all the columns from the specified table
      * @param table the name of the table which the user wishes to select data from
      * @return the ResultSet from the specified table
