@@ -625,39 +625,6 @@ files:
           }
       }
     learner_created: true
-  - name: src/mealplanner/meal/Meal.java
-    visible: true
-    text: |
-      package mealplanner.meal;
-      
-      /**
-       * This class simply stores all the necessary fields for a meal. It does nothing else
-       */
-      public class Meal {
-          // All meals contain what category it is (breakfast, lunch, dinner), what the name is, and what ingredients it needs
-          private final String category;
-          private final String name;
-          private final String[] ingredients;
-      
-          public Meal(String category, String name, String[] ingredients) {
-              this.category = category;
-              this.name = name;
-              this.ingredients = ingredients;
-          }
-      
-          public String getCategory() {
-              return category;
-          }
-      
-          public String getName() {
-              return name;
-          }
-      
-          public String[] getIngredients() {
-              return ingredients;
-          }
-      }
-    learner_created: true
   - name: src/mealplanner/main/Main.java
     visible: true
     text: |-
@@ -739,9 +706,15 @@ files:
   - name: src/mealplanner/meal/datamanager/DataManager.java
     visible: true
     learner_created: true
+  - name: src/mealplanner/meal/cache/MessageCache.java
+    visible: true
+    learner_created: true
+  - name: src/mealplanner/meal/cache/MessageThread.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/25573#comment
 status: Solved
 feedback:
   message: Congratulations!
-  time: "Tue, 19 Mar 2024 01:27:11 UTC"
+  time: "Tue, 19 Mar 2024 02:22:18 UTC"
 record: -1

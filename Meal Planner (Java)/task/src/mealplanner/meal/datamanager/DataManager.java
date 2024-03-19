@@ -34,6 +34,7 @@ public class DataManager {
                                                     "meal_id INTEGER" +
                                                 ")";
             try (PreparedStatement mealsTableStatement = connection.prepareStatement(mealsTableCreation); PreparedStatement ingredientsTableStatement = connection.prepareStatement(ingredientsTableCreation)) {
+                // Initialization
                 mealsTableStatement.execute();
                 ingredientsTableStatement.execute();
             } catch (SQLException ignored) {
@@ -70,7 +71,7 @@ public class DataManager {
     }
 
     /**
-     * Prints out all data in the specified table. Data is parsed differently depending on the input table
+     * Returns all the data in the specified table as a string for use with the show operation. Data is parsed differently depending on the input table
      */
     public static String getMessage() {
         StringBuilder message = new StringBuilder();
@@ -140,6 +141,10 @@ public class DataManager {
         }
     }
 
+    /**
+     * Gets the next meal id to be used when adding a meal to the database
+     * @return the meal id
+     */
     public static int getNextMealID() {
         try (Connection connection = connect()) {
             String selection = "SELECT MAX(meal_id) FROM meals";
@@ -156,6 +161,10 @@ public class DataManager {
         return 0;
     }
 
+    /**
+     * Gets the next ingredient id to be used when adding an ingredient to the database
+     * @return the ingredient id
+     */
     public static int getNextIngredientID() {
         try (Connection connection = connect()) {
             String selection = "SELECT MAX(ingredient_id) FROM ingredients";

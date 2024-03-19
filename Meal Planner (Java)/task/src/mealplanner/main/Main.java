@@ -1,12 +1,14 @@
 package mealplanner.main;
 
 import mealplanner.meal.datamanager.DataManager;
+import mealplanner.meal.cache.MessageCache;
 import mealplanner.userinput.UserInput;
 
 public class Main {
-  // Contains all saved meals
+  // Used to cache the message to print when the show operation is requested
+  private static final MessageCache cache = new MessageCache();
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     // Since the test gets rid of all tables at the start of execution, I need to initialize the tables if they don't already exist
     DataManager.initializeTables();
     // The user input loop
@@ -16,11 +18,13 @@ public class Main {
   /**
    * This is the loop for getting user input and performing actions
    */
-  private static void inputLoop() {
+  private static void inputLoop() throws InterruptedException {
     // The while loop uses this boolean as the condition, so when this boolean is set to false, the loop terminates
     boolean shouldContinue = true;
     while (shouldContinue) {
-      String message = DataManager.getMessage();
+      //String message = DataManager.getMessage();
+      // Caches the message
+      cache.cache();
       System.out.println("What would you like to do (add, show, exit)?");
       String operation = MealUserInput.getValidOperation();
       switch (operation) {
@@ -28,10 +32,10 @@ public class Main {
           addMeal();
           break;
         case "show":
-          if (message.isEmpty()) {
+          if (cache.getCache().isEmpty()) {
             System.out.println("No meals saved. Add a meal first.");
           } else {
-            System.out.println(message);
+            System.out.println(cache.getCache());
           }
           /*
           showMeals();
