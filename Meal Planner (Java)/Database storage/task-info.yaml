@@ -1,16 +1,5 @@
 type: edu
 files:
-  - name: src/mealplanner/Main.java
-    visible: true
-    text: |-
-      package mealplanner;
-      
-      public class Main {
-        public static void main(String[] args) {
-          System.out.println("Hello World!");
-        }
-      }
-    learner_created: false
   - name: build.gradle
     visible: true
     text: |
@@ -478,6 +467,281 @@ files:
         }
       }
     learner_created: false
+  - name: src/mealplanner/main/MealUserInput.java
+    visible: true
+    text: |
+      package mealplanner.main;
+      
+      import java.util.Arrays;
+      import java.util.Scanner;
+      import java.util.regex.Matcher;
+      import java.util.regex.Pattern;
+      
+      /**
+       * This class is specific to this program. It gets valid user input, but the methods are specific to what this program needs.
+       */
+      
+      public class MealUserInput {
+          /**
+           * This enum ensures that user input for what operation to do is correct
+           */
+          private enum Operations {
+              ADD("add"), SHOW("show"), EXIT("exit");
+              private final String operation;
+      
+              Operations(String operation) {
+                  this.operation = operation;
+              }
+      
+              private String getOperation() {
+                  return this.operation;
+              }
+          }
+      
+          /**
+           * This enum ensures that user input for a meal category is correct
+           */
+          public enum Categories {
+              BREAKFAST("breakfast"), LUNCH("lunch"), DINNER("dinner");
+              private final String category;
+      
+              Categories(String category) {
+                  this.category = category;
+              }
+      
+              private String getCategory() {
+                  return this.category;
+              }
+          }
+      
+          private static final Scanner scanner = new Scanner(System.in);
+      
+          /**
+           * Gets a valid operation from user input. Will keep looping until the user inputs a valid operation
+           * @return = the operation
+           */
+          static String getValidOperation() {
+              while (true) {
+                  String operation = scanner.nextLine();
+                  for (Operations enumOperation : Operations.values()) {
+                      if (enumOperation.getOperation().equals(operation)) {
+                          return operation;
+                      }
+                  }
+                  System.out.println("What would you like to do (add, show, exit)?");
+              }
+          }
+      
+          /**
+           * Gets a valid meal category from user input. Will keep looping until the user inputs a valid category
+           * @return = the category
+           */
+          static String getValidCategory() {
+              while (true) {
+                  String category = scanner.nextLine();
+                  for (Categories enumCategory : Categories.values()) {
+                      if (enumCategory.getCategory().equals(category)) {
+                          return category;
+                      }
+                  }
+                  System.out.println("Wrong meal category! Choose from: breakfast, lunch, dinner.");
+              }
+          }
+      
+          /**
+           * Gets a vaid array of ingredients from user input. Will keep looping until the user inputs a valid ingredients array
+           * @return = the array of ingredients
+           */
+          static String[] getValidIngredients() {
+              // This regex matches anything other than letters and whitespace. So if it matches anything in the input, the input is wrong
+              String lettersRegex = "[^a-zA-Z\\s]";
+              // This regex matches anything other than whitespace. So if it matches nothing in the input, the input is wrong
+              String emptyRegex = "\\S";
+              // Pattern for the letters regex
+              Pattern lettersPattern = Pattern.compile(lettersRegex);
+              // Pattern for the empty regex
+              Pattern emptyPattern = Pattern.compile(emptyRegex);
+              whileloop:
+              while (true) {
+                  String userInputString = scanner.nextLine();
+                  // Checks the corner case of there being a comma at the end of the input
+                  if (userInputString.substring(userInputString.length() - 2).matches(",|, ")) {
+                      System.out.println("Wrong format. Use letters only!");
+                  } else {
+                      String[] userInput = userInputString.split(", ");
+                      for (String ingredient : userInput) {
+                          Matcher lettersMatcher = lettersPattern.matcher(ingredient);
+                          Matcher emptyMatcher = emptyPattern.matcher(ingredient);
+                          // Checks each element in the split array rather than the entire inputted string
+                          if (lettersMatcher.find() || !emptyMatcher.find()) {
+                              System.out.println("Wrong format. Use letters only!");
+                              continue whileloop;
+                          }
+                      }
+                      return userInput;
+                  }
+              }
+          }
+      }
+    learner_created: true
+  - name: src/mealplanner/userinput/UserInput.java
+    visible: true
+    text: |-
+      package mealplanner.userinput;
+      
+      import java.util.Scanner;
+      import java.util.regex.Matcher;
+      import java.util.regex.Pattern;
+      
+      /**
+       * This class is a general purpose class for getting user input. Methods can be customized with custom error messages
+       */
+      public class UserInput {
+          private static final Scanner scanner = new Scanner(System.in);
+      
+          /**
+           * Gets a string consisting of just letters and whitespace. Will keep looping until the user inputs a correct string
+           * @return = the string, as long as it is valid
+           */
+          public static String getAlphabeticalString(String errorMessage) {
+              // This regex matches anything other than letters and whitespace. So if it matches anything in the input, the input is wrong
+              String lettersRegex = "[^a-zA-Z\\s]";
+              // This regex matches anything other than whitespace. So if it matches nothing in the input, the input is wrong
+              String emptyRegex = "\\S";
+              // Pattern for the letters regex
+              Pattern lettersPattern = Pattern.compile(lettersRegex);
+              // Pattern for the empty regex
+              Pattern emptyPattern = Pattern.compile(emptyRegex);
+              while (true) {
+                  String userInput = scanner.nextLine();
+                  Matcher lettersMatcher = lettersPattern.matcher(userInput);
+                  Matcher emptyMatcher = emptyPattern.matcher(userInput);
+                  if (lettersMatcher.find() || !emptyMatcher.find()) {
+                      System.out.println(errorMessage);
+                      continue;
+                  }
+                  return userInput;
+              }
+          }
+      }
+    learner_created: true
+  - name: src/mealplanner/meal/Meal.java
+    visible: true
+    text: |
+      package mealplanner.meal;
+      
+      /**
+       * This class simply stores all the necessary fields for a meal. It does nothing else
+       */
+      public class Meal {
+          // All meals contain what category it is (breakfast, lunch, dinner), what the name is, and what ingredients it needs
+          private final String category;
+          private final String name;
+          private final String[] ingredients;
+      
+          public Meal(String category, String name, String[] ingredients) {
+              this.category = category;
+              this.name = name;
+              this.ingredients = ingredients;
+          }
+      
+          public String getCategory() {
+              return category;
+          }
+      
+          public String getName() {
+              return name;
+          }
+      
+          public String[] getIngredients() {
+              return ingredients;
+          }
+      }
+    learner_created: true
+  - name: src/mealplanner/main/Main.java
+    visible: true
+    text: |-
+      package mealplanner.main;
+      
+      import mealplanner.meal.Meal;
+      import mealplanner.userinput.UserInput;
+      
+      import java.util.ArrayList;
+      
+      public class Main {
+        // Contains all saved meals
+        static final ArrayList<Meal> savedMeals = new ArrayList<>();
+      
+        public static void main(String[] args) {
+          // The user input loop
+          inputLoop();
+        }
+      
+        /**
+         * This is the loop for getting user input and performing actions
+         */
+        private static void inputLoop() {
+          // The while loop uses this boolean as the condition, so when this boolean is set to false, the loop terminates
+          boolean shouldContinue = true;
+          while (shouldContinue) {
+            System.out.println("What would you like to do (add, show, exit)?");
+            String operation = MealUserInput.getValidOperation();
+            switch (operation) {
+              case "add":
+                addMeal();
+                break;
+              case "show":
+                showMeals();
+                break;
+              case "exit":
+                shouldContinue = false;
+                System.out.println("Bye!");
+            }
+          }
+        }
+      
+        /**
+         * Adds a new meal to the savedMeals ArrayList. Uses user input classes to get valid input
+         */
+        private static void addMeal() {
+          System.out.println("Which meal do you want to add (breakfast, lunch, dinner)?");
+          String category = MealUserInput.getValidCategory();
+          System.out.println("Input the meal's name:");
+          String name = UserInput.getAlphabeticalString("Wrong format. Use letters only!");
+          System.out.println("Input the ingredients:");
+          String[] ingredients = MealUserInput.getValidIngredients();
+          savedMeals.add(new Meal(category, name, ingredients));
+          System.out.println("The meal has been added!");
+        }
+      
+        /**
+         * Shows all the saves meals in the savedMeals ArrayList
+         */
+        private static void showMeals() {
+          // Will tell the user to add a meal first if no meal has been added yet
+          if (savedMeals.isEmpty()) {
+            System.out.println("No meals saved. Add a meal first.");
+          } else {
+            for (Meal meal : savedMeals) {
+              System.out.println();
+              System.out.printf("Category: %s%n", meal.getCategory());
+              System.out.printf("Name: %s%n", meal.getName());
+              System.out.println("Ingredients:");
+              for (String ingredient : meal.getIngredients()) {
+                System.out.println(ingredient);
+              }
+            }
+            System.out.println();
+          }
+        }
+      }
+    learner_created: true
+  - name: src/mealplanner/meal/datamanager/DataManager.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/25573#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Tue, 19 Mar 2024 01:27:11 UTC"
 record: -1

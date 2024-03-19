@@ -1,15 +1,19 @@
 package mealplanner.main;
 
 import mealplanner.meal.Meal;
+import mealplanner.meal.datamanager.DataManager;
 import mealplanner.userinput.UserInput;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Main {
   // Contains all saved meals
   static final ArrayList<Meal> savedMeals = new ArrayList<>();
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException {
+    // Since the test gets rid of all tables at the start of execution, I need to initialize the tables if they don't already exist
+    DataManager.initializeTables();
     // The user input loop
     inputLoop();
   }
@@ -21,6 +25,7 @@ public class Main {
     // The while loop uses this boolean as the condition, so when this boolean is set to false, the loop terminates
     boolean shouldContinue = true;
     while (shouldContinue) {
+      String message = DataManager.getMessage();
       System.out.println("What would you like to do (add, show, exit)?");
       String operation = MealUserInput.getValidOperation();
       switch (operation) {
@@ -28,7 +33,14 @@ public class Main {
           addMeal();
           break;
         case "show":
+          if (message.isEmpty()) {
+            System.out.println("No meals saved. Add a meal first.");
+          } else {
+            System.out.println(message);
+          }
+          /*
           showMeals();
+           */
           break;
         case "exit":
           shouldContinue = false;
@@ -47,7 +59,11 @@ public class Main {
     String name = UserInput.getAlphabeticalString("Wrong format. Use letters only!");
     System.out.println("Input the ingredients:");
     String[] ingredients = MealUserInput.getValidIngredients();
-    savedMeals.add(new Meal(category, name, ingredients));
+    String mealID = Integer.toString(DataManager.getNextMealID());
+    DataManager.insertInto(DataManager.Tables.MEALS, new String[]{category, name, mealID});
+    for (String ingredient : ingredients) {
+      DataManager.insertInto(DataManager.Tables.INGREDIENTS, new String[]{ingredient, Integer.toString(DataManager.getNextIngredientID()), mealID});
+    }
     System.out.println("The meal has been added!");
   }
 
@@ -61,10 +77,10 @@ public class Main {
     } else {
       for (Meal meal : savedMeals) {
         System.out.println();
-        System.out.printf("Category: %s%n", meal.getCategory());
-        System.out.printf("Name: %s%n", meal.getName());
+        System.out.printf("Category: %s%n", meal.category());
+        System.out.printf("Name: %s%n", meal.name());
         System.out.println("Ingredients:");
-        for (String ingredient : meal.getIngredients()) {
+        for (String ingredient : meal.ingredients()) {
           System.out.println(ingredient);
         }
       }
