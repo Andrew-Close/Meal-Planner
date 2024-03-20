@@ -80,19 +80,26 @@ public class DataManager {
     }
 
     /**
-     * Returns all the data in the specified table as a string for use with the show operation. Data is parsed differently depending on the input table
+     * Returns all the data in the meals table in the specified category as a string for use with the show operation.
+     * @param category the category in which only meals from that category are read
      */
-    public static String getMessage() {
+    public static String getMessage(String category) {
         StringBuilder message = new StringBuilder();
-        message.append("\n");
+        // Keeps track of how many meals there are so the spacing is correct. If there is only one meal, there should not be any padding. If there is more than one meal, there should be padding
+        int mealCounter = 0;
+        // Points to where to place the padding in-between the category and the first name if there is more than one meal
+        int firstPaddingPointer = 0;
         try (Connection connection = connect()) {
-            String mealSelection = "SELECT * FROM meals";
+            String mealSelection = "SELECT * FROM meals WHERE category = '" + category + "'";
             String ingredientSelection = "SELECT * FROM ingredients WHERE meal_id = ? ORDER BY ingredient_id";
             try (PreparedStatement mealStatement = connection.prepareStatement(mealSelection); PreparedStatement ingredientStatement = connection.prepareStatement(ingredientSelection)) {
                 // Result of meal selection
                 try (ResultSet mealData = mealStatement.executeQuery()) {
+                    message.append("Category: ").append(category).append("\n");
+                    // Places the pointer in-between the category and the first name
+                    firstPaddingPointer = message.length();
                     while (mealData.next()) {
-                        message.append("Category: ").append(mealData.getString("category")).append("\n");
+                        ++mealCounter;
                         message.append("Name: ").append(mealData.getString("meal")).append("\n");
                         message.append("Ingredients: \n");
                         ingredientStatement.setInt(1, mealData.getInt("meal_id"));
@@ -110,7 +117,18 @@ public class DataManager {
             }
         } catch (SQLException ignored) {
         }
-        message.delete(message.length() - 1, message.length());
+        // Adds finishing touches to the message based on how many meals there are
+        if (mealCounter == 0) {
+            return "No meals found.";
+        } else if (mealCounter == 1) {
+            // Removes all the padding at the end of the message so the message is flush with the next operation request
+            message.delete(message.length() - 2, message.length());
+        } else {
+            // Adds the first padding at the pointer
+            message.insert(firstPaddingPointer, "\n");
+            // Deletes the extra newline so there aren't two newlines at the end
+            message.delete(message.length() - 1, message.length());
+        }
         return message.toString();
     }
 

@@ -15,6 +15,7 @@ package mealplanner.meal.cache;
  * the message while remaining live. If this class was the one which cached the message, then the thread would die after the first cache. So, this class simply creates a new thread everytime it
  * needs to cache the message and discards it afterward.
  */
+@Deprecated
 public class MessageCache {
     // Holds the cached message
     private static String cache;
