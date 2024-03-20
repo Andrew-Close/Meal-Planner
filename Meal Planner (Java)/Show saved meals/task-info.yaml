@@ -1,16 +1,5 @@
 type: edu
 files:
-  - name: src/mealplanner/Main.java
-    visible: true
-    text: |-
-      package mealplanner;
-      
-      public class Main {
-        public static void main(String[] args) {
-          System.out.println("Hello World!");
-        }
-      }
-    learner_created: false
   - name: build.gradle
     visible: true
     text: |
@@ -444,6 +433,474 @@ files:
         }
       }
     learner_created: false
+  - name: src/mealplanner/main/MealUserInput.java
+    visible: true
+    text: |
+      package mealplanner.main;
+      
+      import java.util.Scanner;
+      import java.util.regex.Matcher;
+      import java.util.regex.Pattern;
+      
+      /**
+       * This class is specific to this program. It gets valid user input, but the methods are specific to what this program needs.
+       */
+      
+      public class MealUserInput {
+          /**
+           * This enum ensures that user input for what operation to do is correct
+           */
+          private enum Operations {
+              ADD("add"), SHOW("show"), EXIT("exit");
+              private final String operation;
+      
+              Operations(String operation) {
+                  this.operation = operation;
+              }
+      
+              private String getOperation() {
+                  return this.operation;
+              }
+          }
+      
+          /**
+           * This enum ensures that user input for a meal category is correct
+           */
+          public enum Categories {
+              BREAKFAST("breakfast"), LUNCH("lunch"), DINNER("dinner");
+              private final String category;
+      
+              Categories(String category) {
+                  this.category = category;
+              }
+      
+              private String getCategory() {
+                  return this.category;
+              }
+          }
+      
+          private static final Scanner scanner = new Scanner(System.in);
+      
+          /**
+           * Gets a valid operation from user input. Will keep looping until the user inputs a valid operation
+           * @return = the operation
+           */
+          static String getValidOperation() {
+              while (true) {
+                  String operation = scanner.nextLine();
+                  for (Operations enumOperation : Operations.values()) {
+                      if (enumOperation.getOperation().equals(operation)) {
+                          return operation;
+                      }
+                  }
+                  System.out.println("What would you like to do (add, show, exit)?");
+              }
+          }
+      
+          /**
+           * Gets a valid meal category from user input. Will keep looping until the user inputs a valid category
+           * @return = the category
+           */
+          static String getValidCategory() {
+              while (true) {
+                  String category = scanner.nextLine();
+                  for (Categories enumCategory : Categories.values()) {
+                      if (enumCategory.getCategory().equals(category)) {
+                          return category;
+                      }
+                  }
+                  System.out.println("Wrong meal category! Choose from: breakfast, lunch, dinner.");
+              }
+          }
+      
+          /**
+           * Gets a valid array of ingredients from user input. Will keep looping until the user inputs a valid ingredients array
+           * @return = the array of ingredients
+           */
+          static String[] getValidIngredients() {
+              // This regex matches anything other than letters and whitespace. So if it matches anything in the input, the input is wrong
+              String lettersRegex = "[^a-zA-Z\\s]";
+              // This regex matches anything other than whitespace. So if it matches nothing in the input, the input is wrong
+              String emptyRegex = "\\S";
+              // Pattern for the letters regex
+              Pattern lettersPattern = Pattern.compile(lettersRegex);
+              // Pattern for the empty regex
+              Pattern emptyPattern = Pattern.compile(emptyRegex);
+              whileloop:
+              while (true) {
+                  String userInputString = scanner.nextLine();
+                  // Checks the corner case of there being a comma at the end of the input
+                  if (userInputString.length() >= 2) {
+                      if (userInputString.substring(userInputString.length() - 2).matches(",|, ")) {
+                          System.out.println("Wrong format. Use letters only!");
+                          continue;
+                      }
+                  }
+                  String[] userInput = userInputString.split(", ");
+                  for (String ingredient : userInput) {
+                      Matcher lettersMatcher = lettersPattern.matcher(ingredient);
+                      Matcher emptyMatcher = emptyPattern.matcher(ingredient);
+                      // Checks each element in the split array rather than the entire inputted string
+                      if (lettersMatcher.find() || !emptyMatcher.find()) {
+                          System.out.println("Wrong format. Use letters only!");
+                          continue whileloop;
+                      }
+                  }
+                  return userInput;
+              }
+          }
+      }
+    learner_created: true
+  - name: src/mealplanner/userinput/UserInput.java
+    visible: true
+    text: |-
+      package mealplanner.userinput;
+      
+      import java.util.Scanner;
+      import java.util.regex.Matcher;
+      import java.util.regex.Pattern;
+      
+      /**
+       * This class is a general purpose class for getting user input. Methods can be customized with custom error messages
+       */
+      public class UserInput {
+          private static final Scanner scanner = new Scanner(System.in);
+      
+          /**
+           * Gets a string consisting of just letters and whitespace. Will keep looping until the user inputs a correct string
+           * @return = the string, as long as it is valid
+           */
+          public static String getAlphabeticalString(String errorMessage) {
+              // This regex matches anything other than letters and whitespace. So if it matches anything in the input, the input is wrong
+              String lettersRegex = "[^a-zA-Z\\s]";
+              // This regex matches anything other than whitespace. So if it matches nothing in the input, the input is wrong
+              String emptyRegex = "\\S";
+              // Pattern for the letters regex
+              Pattern lettersPattern = Pattern.compile(lettersRegex);
+              // Pattern for the empty regex
+              Pattern emptyPattern = Pattern.compile(emptyRegex);
+              while (true) {
+                  String userInput = scanner.nextLine();
+                  Matcher lettersMatcher = lettersPattern.matcher(userInput);
+                  Matcher emptyMatcher = emptyPattern.matcher(userInput);
+                  if (lettersMatcher.find() || !emptyMatcher.find()) {
+                      System.out.println(errorMessage);
+                      continue;
+                  }
+                  return userInput;
+              }
+          }
+      }
+    learner_created: true
+  - name: src/mealplanner/meal/datamanager/DataManager.java
+    visible: true
+    text: |
+      package mealplanner.meal.datamanager;
+      
+      import org.postgresql.ds.PGSimpleDataSource;
+      
+      import java.sql.Connection;
+      import java.sql.PreparedStatement;
+      import java.sql.ResultSet;
+      import java.sql.SQLException;
+      
+      /**
+       * This class manages the meal database. It lets you get data, insert data, modify data, and read data
+       */
+      public class DataManager {
+          /**
+           * This enum is used to ensure that correct tables which exist are being chosen
+           */
+          public enum Tables {
+              MEALS, INGREDIENTS
+          }
+      
+          /**
+           * Initializes the required tables if they don't already exist at the beginning of the runtime
+           */
+          public static void initializeTables() {
+              try (Connection connection = connect()) {
+                  String mealsTableCreation = "CREATE TABLE IF NOT EXISTS meals (" +
+                                                  "category VARCHAR(9)," +
+                                                  "meal VARCHAR(50)," +
+                                                  "meal_id INTEGER" +
+                                              ")";
+                  String ingredientsTableCreation = "CREATE TABLE IF NOT EXISTS ingredients (" +
+                                                          "ingredient VARCHAR(50)," +
+                                                          "ingredient_id INTEGER," +
+                                                          "meal_id INTEGER" +
+                                                      ")";
+                  try (PreparedStatement mealsTableStatement = connection.prepareStatement(mealsTableCreation); PreparedStatement ingredientsTableStatement = connection.prepareStatement(ingredientsTableCreation)) {
+                      // Initialization
+                      mealsTableStatement.execute();
+                      ingredientsTableStatement.execute();
+                  } catch (SQLException ignored) {
+                  }
+              } catch (SQLException ignored) {
+              }
+          }
+      
+          /**
+           * Returns a ResultSet of all the columns from the specified table
+           * @param table the name of the table which the user wishes to select data from
+           * @return the ResultSet from the specified table
+           */
+          @Deprecated
+          public static ResultSet getAllColumns(Tables table) {
+              try (Connection connection = connect()) {
+                  if (table.equals(Tables.MEALS)) {
+                      String selection = "SELECT * FROM meals";
+                      try (PreparedStatement preparedStatement = connection.prepareStatement(selection)) {
+                          return preparedStatement.executeQuery();
+                      } catch (SQLException ignored) {
+                      }
+                  } else if (table.equals(Tables.INGREDIENTS)) {
+                      String selection = "SELECT * FROM ingredients";
+                      try (PreparedStatement preparedStatement = connection.prepareStatement(selection)) {
+                          return preparedStatement.executeQuery();
+                      } catch (SQLException ignored) {
+                      }
+                  }
+      
+              } catch (SQLException ignored) {
+              }
+              return null;
+          }
+      
+          /**
+           * Returns all the data in the specified table as a string for use with the show operation. Data is parsed differently depending on the input table
+           */
+          public static String getMessage() {
+              StringBuilder message = new StringBuilder();
+              message.append("\n");
+              try (Connection connection = connect()) {
+                  String mealSelection = "SELECT * FROM meals";
+                  String ingredientSelection = "SELECT * FROM ingredients WHERE meal_id = ? ORDER BY ingredient_id";
+                  try (PreparedStatement mealStatement = connection.prepareStatement(mealSelection); PreparedStatement ingredientStatement = connection.prepareStatement(ingredientSelection)) {
+                      // Result of meal selection
+                      try (ResultSet mealData = mealStatement.executeQuery()) {
+                          while (mealData.next()) {
+                              message.append("Category: ").append(mealData.getString("category")).append("\n");
+                              message.append("Name: ").append(mealData.getString("meal")).append("\n");
+                              message.append("Ingredients: \n");
+                              ingredientStatement.setInt(1, mealData.getInt("meal_id"));
+                              try (ResultSet ingredientData = ingredientStatement.executeQuery()) {
+                                  while (ingredientData.next()) {
+                                      message.append(ingredientData.getString("ingredient")).append("\n");
+                                  }
+                              } catch (Exception ignored) {
+                              }
+                              message.append("\n");
+                          }
+                      } catch (SQLException ignored) {
+                      }
+                  } catch (SQLException ignored) {
+                  }
+              } catch (SQLException ignored) {
+              }
+              message.delete(message.length() - 1, message.length());
+              return message.toString();
+          }
+      
+          /**
+           * Inserts passed data into the specified table. Uses the Tables enum to specify which table it should insert the data into. The data is parsed differently depending on which table it is being
+           * put into
+           * @param table the table that the user wants to insert data into
+           * @param values a string array consisting of all data the user wants to insert
+           */
+          public static void insertInto(Tables table, String[] values) {
+              try (Connection connection = connect()) {
+                  // If the passed table is the meals table, then the data is parsed specially for that table
+                  if (table.equals(Tables.MEALS)) {
+                      String insert = "INSERT INTO meals VALUES(?, ?, ?)";
+                      try (PreparedStatement preparedStatement = connection.prepareStatement(insert)) {
+                          preparedStatement.setString(1, values[0]);
+                          preparedStatement.setString(2, values[1]);
+                          preparedStatement.setInt(3, Integer.parseInt(values[2]));
+                          preparedStatement.executeUpdate();
+                      } catch (SQLException e) {
+                          e.getMessage();
+                      }
+                  // If the passed table is the ingredients table, then the data is parsed specially for that table
+                  } else if (table.equals(Tables.INGREDIENTS)) {
+                      String insert = "INSERT INTO ingredients VALUES(?, ?, ?)";
+                      try (PreparedStatement preparedStatement = connection.prepareStatement(insert)) {
+                          preparedStatement.setString(1, values[0]);
+                          preparedStatement.setInt(2, Integer.parseInt(values[1]));
+                          preparedStatement.setInt(3, Integer.parseInt(values[2]));
+                          preparedStatement.executeUpdate();
+                      } catch (SQLException e) {
+                          e.getMessage();
+                      }
+                  }
+              } catch (SQLException e) {
+                  e.getMessage();
+              }
+          }
+      
+          /**
+           * Gets the next meal id to be used when adding a meal to the database
+           * @return the meal id
+           */
+          public static int getNextMealID() {
+              try (Connection connection = connect()) {
+                  String selection = "SELECT MAX(meal_id) FROM meals";
+                  try (PreparedStatement statement = connection.prepareStatement(selection)) {
+                      try (ResultSet result = statement.executeQuery()) {
+                          result.next();
+                          return result.getInt("max") + 1;
+                      } catch (SQLException ignored) {
+                      }
+                  } catch (SQLException ignored) {
+                  }
+              } catch (SQLException ignored) {
+              }
+              return 0;
+          }
+      
+          /**
+           * Gets the next ingredient id to be used when adding an ingredient to the database
+           * @return the ingredient id
+           */
+          public static int getNextIngredientID() {
+              try (Connection connection = connect()) {
+                  String selection = "SELECT MAX(ingredient_id) FROM ingredients";
+                  try (PreparedStatement statement = connection.prepareStatement(selection)) {
+                      try (ResultSet result = statement.executeQuery()) {
+                          result.next();
+                          return result.getInt("max") + 1;
+                      } catch (SQLException ignored) {
+                      }
+                  } catch (SQLException ignored) {
+                  }
+              } catch (SQLException ignored) {
+              }
+              return 0;
+          }
+      
+          /**
+           * Returns a connection object to be used in other methods. Needs to be used to a try-catch block because one is not used here
+           * @return the connection object
+           * @throws SQLException;
+           */
+          private static Connection connect() throws SQLException {
+              String DB_URL = "jdbc:postgresql:meals_db";
+              String USER = "postgres";
+              String PASS = "1111";
+              PGSimpleDataSource dataSource = new PGSimpleDataSource();
+              dataSource.setURL(DB_URL);
+              dataSource.setUser(USER);
+              dataSource.setPassword(PASS);
+              return dataSource.getConnection(USER, PASS);
+          }
+      }
+    learner_created: true
+  - name: src/mealplanner/main/Main.java
+    visible: true
+    text: |-
+      package mealplanner.main;
+      
+      import mealplanner.meal.datamanager.DataManager;
+      import mealplanner.meal.cache.MessageCache;
+      import mealplanner.userinput.UserInput;
+      
+      public class Main {
+        // Used to cache the message to print when the show operation is requested
+        private static final MessageCache cache = new MessageCache();
+      
+        public static void main(String[] args) throws InterruptedException {
+          // Since the test gets rid of all tables at the start of execution, I need to initialize the tables if they don't already exist
+          DataManager.initializeTables();
+          // The user input loop
+          inputLoop();
+        }
+      
+        /**
+         * This is the loop for getting user input and performing actions
+         */
+        private static void inputLoop() throws InterruptedException {
+          // The while loop uses this boolean as the condition, so when this boolean is set to false, the loop terminates
+          boolean shouldContinue = true;
+          while (shouldContinue) {
+            //String message = DataManager.getMessage();
+            // Caches the message
+            cache.cache();
+            System.out.println("What would you like to do (add, show, exit)?");
+            String operation = MealUserInput.getValidOperation();
+            switch (operation) {
+              case "add":
+                addMeal();
+                break;
+              case "show":
+                if (cache.getCache().isEmpty()) {
+                  System.out.println("No meals saved. Add a meal first.");
+                } else {
+                  System.out.println(cache.getCache());
+                }
+                /*
+                showMeals();
+                 */
+                break;
+              case "exit":
+                shouldContinue = false;
+                System.out.println("Bye!");
+            }
+          }
+        }
+      
+        /**
+         * Adds a new meal to the savedMeals ArrayList. Uses user input classes to get valid input
+         */
+        private static void addMeal() {
+          System.out.println("Which meal do you want to add (breakfast, lunch, dinner)?");
+          String category = MealUserInput.getValidCategory();
+          System.out.println("Input the meal's name:");
+          String name = UserInput.getAlphabeticalString("Wrong format. Use letters only!");
+          System.out.println("Input the ingredients:");
+          String[] ingredients = MealUserInput.getValidIngredients();
+          String mealID = Integer.toString(DataManager.getNextMealID());
+          DataManager.insertInto(DataManager.Tables.MEALS, new String[]{category, name, mealID});
+          for (String ingredient : ingredients) {
+            DataManager.insertInto(DataManager.Tables.INGREDIENTS, new String[]{ingredient, Integer.toString(DataManager.getNextIngredientID()), mealID});
+          }
+          System.out.println("The meal has been added!");
+        }
+      }
+    learner_created: true
+  - name: src/mealplanner/meal/cache/MessageCache.java
+    visible: true
+    text: |
+      package mealplanner.meal.cache;
+      
+      /**
+       * This class caches the message to be used with the show operation. It doesn't actually do the caching here. Rather, it uses a MessageThread to cache it. This is so it can use a thread to cache
+       * the message while remaining live. If this class was the one which cached the message, then the thread would die after the first cache. So, this class simply creates a new thread everytime it
+       * needs to cache the message and discards it afterward.
+       */
+      public class MessageCache {
+          // Holds the cached message
+          private static String cache;
+      
+          /**
+           * Caches the message
+           * @throws InterruptedException;
+           */
+          public void cache() throws InterruptedException {
+              MessageThread thread = new MessageThread();
+              thread.start();
+              // If the thread isn't joined, then cache might be set to null
+              thread.join();
+              cache = thread.getCache();
+          }
+      
+          public String getCache() {
+              return cache;
+          }
+      }
+    learner_created: true
+  - name: src/mealplanner/meal/cache/MessageThread.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/25574#comment
 status: Unchecked
 record: -1
