@@ -8,6 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ *
+ *
+ *
+ * !!!
+ * WARNING!! Read the javadoc for MessageCache.java
+ * !!!
+ *
+ *
+ *
  * This class manages the meal database. It lets you get data, insert data, modify data, and read data
  */
 public class DataManager {
