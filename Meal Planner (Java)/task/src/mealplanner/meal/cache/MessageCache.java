@@ -8,7 +8,7 @@ package mealplanner.meal.cache;
  * WARNING!! I realized that this whole cache system doesn't work as a thread. Yes, this class uses threads, but main still has to wait for the cache method to complete as this class does
  * not extend Thread. And I tried to get the system to work as a thread, but I couldn't get it to work, so I gave up.
  * !!!
- *
+ * <p>
  *
  *
  * This class caches the message to be used with the show operation. It doesn't actually do the caching here. Rather, it uses a MessageThread to cache it. This is so it can use a thread to cache
@@ -24,6 +24,7 @@ public class MessageCache {
      * Caches the message
      * @throws InterruptedException;
      */
+    @Deprecated
     public void cache() throws InterruptedException {
         MessageThread thread = new MessageThread();
         thread.start();
@@ -32,6 +33,7 @@ public class MessageCache {
         cache = thread.getCache();
     }
 
+    @Deprecated
     public String getCache() {
         return cache;
     }

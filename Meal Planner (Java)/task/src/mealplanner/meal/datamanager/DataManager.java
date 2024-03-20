@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * !!!
  * WARNING!! Read the javadoc for MessageCache.java
  * !!!
- *
+ * <p>
  *
  *
  * This class manages the meal database. It lets you get data, insert data, modify data, and read data
@@ -53,6 +53,8 @@ public class DataManager {
     }
 
     /**
+     * (Doesn't work because the ResultSet gets closed when it gets returned)
+     * <p>
      * Returns a ResultSet of all the columns from the specified table
      * @param table the name of the table which the user wishes to select data from
      * @return the ResultSet from the specified table
