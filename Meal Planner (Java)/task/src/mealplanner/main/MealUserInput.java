@@ -13,7 +13,7 @@ public class MealUserInput {
      * This enum ensures that user input for what operation to do is correct
      */
     private enum Operations {
-        ADD("add"), SHOW("show"), EXIT("exit");
+        ADD("add"), SHOW("show"), EXIT("exit"), PLAN("plan");
         private final String operation;
 
         Operations(String operation) {
@@ -55,7 +55,7 @@ public class MealUserInput {
                     return operation;
                 }
             }
-            System.out.println("What would you like to do (add, show, exit)?");
+            System.out.println(Main.getOperationMessage());
         }
     }
 

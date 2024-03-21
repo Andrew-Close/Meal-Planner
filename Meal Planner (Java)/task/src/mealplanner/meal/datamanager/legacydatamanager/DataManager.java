@@ -1,4 +1,4 @@
-package mealplanner.meal.datamanager;
+package mealplanner.meal.datamanager.legacydatamanager;
 
 import org.postgresql.ds.PGSimpleDataSource;
 
@@ -8,15 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
- *
- *
- * !!!
- * WARNING!! Read the javadoc for MessageCache.java
- * !!!
- * <p>
- *
- *
  * This class manages the meal database. It lets you get data, insert data, modify data, and read data
  */
 public class DataManager {
@@ -42,10 +33,19 @@ public class DataManager {
                                                     "ingredient_id INTEGER," +
                                                     "meal_id INTEGER" +
                                                 ")";
-            try (PreparedStatement mealsTableStatement = connection.prepareStatement(mealsTableCreation); PreparedStatement ingredientsTableStatement = connection.prepareStatement(ingredientsTableCreation)) {
+            String planTableCreation = "CREATE TABLE IF NOT EXISTS plan (" +
+                                            "category VARCHAR(9)," +
+                                            "meal VARCHAR(50)," +
+                                            "meal_id INTEGER," +
+                                            "day VARCHAR(9)" +
+                                        ")";
+            try (PreparedStatement mealsTableStatement = connection.prepareStatement(mealsTableCreation);
+                 PreparedStatement ingredientsTableStatement = connection.prepareStatement(ingredientsTableCreation);
+                 PreparedStatement planTableStatement = connection.prepareStatement(planTableCreation)) {
                 // Initialization
                 mealsTableStatement.execute();
                 ingredientsTableStatement.execute();
+                planTableStatement.execute();
             } catch (SQLException ignored) {
             }
         } catch (SQLException ignored) {
@@ -53,8 +53,6 @@ public class DataManager {
     }
 
     /**
-     * (Doesn't work because the ResultSet gets closed when it gets returned)
-     * <p>
      * Returns a ResultSet of all the columns from the specified table
      * @param table the name of the table which the user wishes to select data from
      * @return the ResultSet from the specified table

@@ -1,9 +1,10 @@
 package mealplanner.main;
 
-import mealplanner.meal.datamanager.DataManager;
+import mealplanner.meal.datamanager.legacydatamanager.DataManager;
 import mealplanner.userinput.UserInput;
 
 public class Main {
+  private static String operationMessage = "What would you like to do (add, show, plan, exit)?";
   public static void main(String[] args) {
     // Since the test gets rid of all tables at the start of execution, I need to initialize the tables if they don't already exist
     DataManager.initializeTables();
@@ -20,7 +21,7 @@ public class Main {
     while (shouldContinue) {
       //String message = DataManager.getMessage();
       // Caches the message
-      System.out.println("What would you like to do (add, show, exit)?");
+      System.out.println(operationMessage);
       String operation = MealUserInput.getValidOperation();
       switch (operation) {
         case "add":
@@ -60,5 +61,9 @@ public class Main {
   private static void showMeals() {
     System.out.println("Which category do you want to print (breakfast, lunch, dinner)?");
     System.out.println(DataManager.getMessage(MealUserInput.getValidCategory()));
+  }
+
+  public static String getOperationMessage() {
+    return operationMessage;
   }
 }

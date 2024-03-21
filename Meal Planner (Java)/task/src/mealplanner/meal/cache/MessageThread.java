@@ -1,8 +1,18 @@
 package mealplanner.meal.cache;
 
-import mealplanner.meal.datamanager.DataManager;
+import mealplanner.meal.datamanager.legacydatamanager.DataManager;
 
 /**
+ *
+ *
+ *
+ * !!!
+ * WARNING!! Read the javadoc for MessageCache.java
+ * !!!
+ * <p>
+ *
+ *
+ *
  * This class is the thread that caches the message to be used with the show operation. This class is used with the MessageCache class.
  */
 @Deprecated
