@@ -2,13 +2,16 @@ package mealplanner.meal.datamanager.dao.plan;
 
 import org.postgresql.ds.PGSimpleDataSource;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * This class handles everything to do with connecting to the database and executing passed queries for the plans table. The DAO itself doesn't actually execute queries. Rather, it passes queries
+ * to this object to be executed.
+ */
 public class DbPlanClient {
-    private PGSimpleDataSource dataSource;
+    private final PGSimpleDataSource dataSource;
 
     public DbPlanClient() {
         String DB_URL = "jdbc:postgresql:meals_db";
@@ -22,11 +25,41 @@ public class DbPlanClient {
 
     public void run(String query) {
         try (Connection connection = dataSource.getConnection();
-         PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.executeUpdate();
-        } catch (SQLException ignored) {
+         Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    public
+    public Plan select(String query) {
+        List<Plan> plans = selectForList(query);
+        if (plans.size() == 1) {
+            return plans.get(0);
+        } else if (plans.isEmpty()) {
+            return null;
+        } else {
+            throw new IllegalStateException("Query returned more than one object");
+        }
+    }
+
+    public List<Plan> selectForList(String query) {
+        List<Plan> plans = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet result = statement.executeQuery()
+        ) {
+            while (result.next()) {
+                String category = result.getString("category");
+                String meal = result.getString("meal");
+                int meal_id = result.getInt("meal_id");
+                String day = result.getString("day");
+                plans.add(new Plan(category, meal, meal_id, day));
+            }
+            return plans;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return plans;
+    }
 }

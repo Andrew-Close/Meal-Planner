@@ -1,11 +1,15 @@
 package mealplanner.main;
 
+import mealplanner.meal.datamanager.dao.plan.DbPlanDao;
+import mealplanner.meal.datamanager.dao.plan.Plan;
 import mealplanner.meal.datamanager.legacydatamanager.DataManager;
 import mealplanner.userinput.UserInput;
 
 public class Main {
+  private static DbPlanDao planDao = new DbPlanDao();
   private static String operationMessage = "What would you like to do (add, show, plan, exit)?";
   public static void main(String[] args) {
+    System.out.println(planDao.find(3));
     // Since the test gets rid of all tables at the start of execution, I need to initialize the tables if they don't already exist
     DataManager.initializeTables();
     // The user input loop
