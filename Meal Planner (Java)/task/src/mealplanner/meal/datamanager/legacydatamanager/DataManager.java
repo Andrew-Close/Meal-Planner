@@ -1,11 +1,14 @@
 package mealplanner.meal.datamanager.legacydatamanager;
 
+import mealplanner.main.MealUserInput;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class manages the meal database. It lets you get data, insert data, modify data, and read data
@@ -165,6 +168,58 @@ public class DataManager {
             }
         } catch (SQLException e) {
             e.getMessage();
+        }
+    }
+
+    /**
+     * Gets all meals in the passed category and returns them as a string array. The meals will be in alphabetical order
+     * @param category the category from which to get the meals
+     * @return the string array of the meals
+     * @throws SQLException;
+     */
+    public static String[] getMealsAlphabeticalOrder(String category) throws SQLException {
+        String query;
+        // The message which will be returned
+        List<String> meals = new ArrayList<>();
+        // Checks which category was passed and sets the query accordingly
+        if (category.equalsIgnoreCase(MealUserInput.Categories.BREAKFAST.getCategory())) {
+            query = "SELECT meal FROM meals WHERE category = 'breakfast' ORDER BY meal";
+        } else if (category.equalsIgnoreCase(MealUserInput.Categories.LUNCH.getCategory())) {
+            query = "SELECT meal FROM meals WHERE category = 'lunch' ORDER BY meal";
+        } else if (category.equalsIgnoreCase(MealUserInput.Categories.DINNER.getCategory())) {
+            query = "SELECT meal FROM meals WHERE category = 'dinner' ORDER BY meal";
+        } else {
+            throw new IllegalArgumentException("The passed category was incorrect. It needs to be either \"breakfast\", \"lunch\", or \"dinner\". Case does not matter.");
+        }
+        try (Connection connection = connect();
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet result = statement.executeQuery()
+        ) {
+            while (result.next()) {
+                meals.add(result.getString("meal"));
+            }
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        }
+        return (String[]) meals.toArray();
+    }
+
+    /**
+     * Takes the name of a saved meal and returns the corresponding meal_id
+     * @param mealName the meal name to get the meal_id from
+     * @return the meal_id of the meal
+     */
+    public static int getMealIDFromName(String mealName) {
+        String query = String.format(
+                "SELECT meal_id FROM meals WHERE UPPER(meal) = UPPER(%s)", mealName
+        );
+        try (Connection connection = connect();
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet result = statement.executeQuery()
+        ) {
+            return result.getInt("meal_id");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

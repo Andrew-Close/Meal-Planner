@@ -5,11 +5,12 @@ import mealplanner.meal.datamanager.dao.plan.Plan;
 import mealplanner.meal.datamanager.legacydatamanager.DataManager;
 import mealplanner.userinput.UserInput;
 
+import java.sql.SQLException;
+
 public class Main {
   private static DbPlanDao planDao = new DbPlanDao();
   private static String operationMessage = "What would you like to do (add, show, plan, exit)?";
   public static void main(String[] args) {
-    System.out.println(planDao.find(3));
     // Since the test gets rid of all tables at the start of execution, I need to initialize the tables if they don't already exist
     DataManager.initializeTables();
     // The user input loop
@@ -65,6 +66,62 @@ public class Main {
   private static void showMeals() {
     System.out.println("Which category do you want to print (breakfast, lunch, dinner)?");
     System.out.println(DataManager.getMessage(MealUserInput.getValidCategory()));
+  }
+
+  /**
+   * Goes through the planning process to plan meals for each category for each day of the week
+   */
+  private static void planMeals() throws SQLException {
+    // Iterates through each of the days
+    for (int i = 1; i <= 7; i++) {
+      // Iterates through each of the categories
+      for (int j = 1; j <= 7; j++) {
+        // Current day
+        String day = getDayFromIteration(i);
+        // Current category
+        String category = getCategoryFromIteration(j);
+        // The meals from the current category
+        String[] meals = DataManager.getMealsAlphabeticalOrder(category);
+        System.out.println(day);
+        for (String meal : meals) System.out.println(meal);
+        System.out.printf("Choose the %s for %s from the list above:%n", category.toLowerCase(), day);
+        // Gets user input for a meal which is in the meals array
+        String choice = MealUserInput.getValidMealUsingArray(meals);
+        planDao.add(new Plan(category.toLowerCase(), choice, DataManager.getMealIDFromName(choice), day.toLowerCase()));
+      }
+    }
+  }
+
+  /**
+   * A method to be used with the planMeals method which returns the day corresponding to the iteration of the for loop in the planMeals method, 1-7
+   * @param i the iteration
+   * @return the day
+   */
+  private static String getDayFromIteration(int i) {
+      return switch (i) {
+          case 1 -> "Monday";
+          case 2 -> "Tuesday";
+          case 3 -> "Wednesday";
+          case 4 -> "Thursday";
+          case 5 -> "Friday";
+          case 6 -> "Saturday";
+          case 7 -> "Sunday";
+          default -> "Null";
+      };
+  }
+
+  /**
+   * A method to be used with the planMeals method which returns the category corresponding to the iteration of the for loop in the planMeals method, 1-3
+   * @param i the iteration
+   * @return the category
+   */
+  private static String getCategoryFromIteration(int i) {
+    return switch (i) {
+      case 1 -> "Breakfast";
+      case 2 -> "Lunch";
+      case 3 -> "Dinner";
+      default -> "Null";
+    };
   }
 
   public static String getOperationMessage() {

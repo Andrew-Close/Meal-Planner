@@ -36,7 +36,7 @@ public class MealUserInput {
             this.category = category;
         }
 
-        private String getCategory() {
+        public String getCategory() {
             return this.category;
         }
     }
@@ -109,6 +109,23 @@ public class MealUserInput {
                 }
             }
             return userInput;
+        }
+    }
+
+    /**
+     * Gets user input for a valid meal which is in the meals array. Will keep looping until a valid meal in inputted
+     * @param meals the array containing all the valid meals
+     * @return the user input meal
+     */
+    static String getValidMealUsingArray(String[] meals) {
+        while (true) {
+            String choice = scanner.nextLine();
+            for (String meal : meals) {
+                if (meal.equalsIgnoreCase(choice)) {
+                    return choice;
+                }
+            }
+            System.out.println("This meal doesn't exist. Choose a meal from the list above.");
         }
     }
 }
