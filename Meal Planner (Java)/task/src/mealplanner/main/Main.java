@@ -1,16 +1,21 @@
 package mealplanner.main;
 
-import mealplanner.meal.datamanager.dao.plan.DbPlanDao;
-import mealplanner.meal.datamanager.dao.plan.Plan;
-import mealplanner.meal.datamanager.legacydatamanager.DataManager;
+import mealplanner.datamanager.dao.plan.DbPlanDao;
+import mealplanner.datamanager.dao.plan.Plan;
+import mealplanner.datamanager.legacydatamanager.DataManager;
 import mealplanner.userinput.UserInput;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.SQLException;
 
 public class Main {
   private static final DbPlanDao planDao = new DbPlanDao();
-  private static final String operationMessage = "What would you like to do (add, show, plan, exit)?";
-  public static void main(String[] args) throws SQLException {
+  private static final String operationMessage = "What would you like to do (add, show, plan, save, exit)?";
+  public static void main(String[] args) throws SQLException, IOException {
+    //System.out.println("Working Directory = " + System.getProperty("user.dir"));
+    saveShoppingList();
     // Since the test gets rid of all tables at the start of execution, I need to initialize the tables if they don't already exist
     DataManager.initializeTables();
     // The user input loop
@@ -97,6 +102,17 @@ public class Main {
       System.out.printf("Yeah! We planned the meals for %s.%n%n", day);
     }
     System.out.println(DataManager.getPlanMessage());
+  }
+
+  /**
+   * Generates a shopping list of all the ingredients needed for all the meals in the plan and saves the list to a file
+   */
+  private static void saveShoppingList() throws IOException {
+    try (Writer fileWriter = new FileWriter(".\\Meal Planner (Java)\\task\\src\\shoppinglist\\shoppinglist.txt")) {
+      fileWriter.write("Test write");
+    } catch (IOException e) {
+      throw new IOException(e);
+    }
   }
 
   /**

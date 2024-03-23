@@ -1,4 +1,4 @@
-package mealplanner.meal.datamanager.legacydatamanager;
+package mealplanner.datamanager.legacydatamanager;
 
 import mealplanner.main.MealUserInput;
 import org.postgresql.ds.PGSimpleDataSource;
@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class manages the meal database. It lets you get data, insert data, modify data, and read data, among other things
@@ -234,6 +235,14 @@ public class DataManager {
             array[i] = meals.get(i);
         }
         return array;
+    }
+
+    /**
+     * Finds how many times each ingredient appears across all meals. For example, if two different meals have the ingredient bread, then the key bread on the map will have a value of 2
+     * @return the map of frequencies
+     */
+    public static Map<String, Integer> getIngredientFrequencies() {
+
     }
 
     /**

@@ -1,4 +1,4 @@
-package mealplanner.meal.datamanager.dao.plan;
+package mealplanner.datamanager.dao.plan;
 
 import java.sql.SQLException;
 import java.util.List;

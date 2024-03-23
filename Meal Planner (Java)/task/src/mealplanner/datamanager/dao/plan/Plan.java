@@ -1,4 +1,4 @@
-package mealplanner.meal.datamanager.dao.plan;
+package mealplanner.datamanager.dao.plan;
 
 /**
  * This is just a class for holding fields for the plan for the database

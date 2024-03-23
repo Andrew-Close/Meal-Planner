@@ -13,7 +13,7 @@ public class MealUserInput {
      * This enum ensures that user input for what operation to do is correct
      */
     private enum Operations {
-        ADD("add"), SHOW("show"), EXIT("exit"), PLAN("plan");
+        ADD("add"), SHOW("show"), EXIT("exit"), PLAN("plan"), SAVE("save");
         private final String operation;
 
         Operations(String operation) {
