@@ -26,7 +26,7 @@ public class MessageThread extends Thread {
 
     @Override
     public void run() {
-        cache = DataManager.getMessage("breakfast");
+        cache = DataManager.getMealsMessage("breakfast");
     }
 
     String getCache() {

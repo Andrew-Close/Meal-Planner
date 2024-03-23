@@ -13,6 +13,7 @@
     <orderEntry type="module" module-name="Meal_Planner_(Java).util.main" />
     <orderEntry type="module" module-name="Meal_Planner_(Java).util.test" production-on-test="" />
     <orderEntry type="library" name="Gradle: org.postgresql:postgresql:42.7.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.14.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.hyperskill:hs-test:release-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: org.assertj:assertj-swing-junit:3.17.1" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.13.2" level="project" />

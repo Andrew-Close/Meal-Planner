@@ -8,9 +8,9 @@ import mealplanner.userinput.UserInput;
 import java.sql.SQLException;
 
 public class Main {
-  private static DbPlanDao planDao = new DbPlanDao();
-  private static String operationMessage = "What would you like to do (add, show, plan, exit)?";
-  public static void main(String[] args) {
+  private static final DbPlanDao planDao = new DbPlanDao();
+  private static final String operationMessage = "What would you like to do (add, show, plan, exit)?";
+  public static void main(String[] args) throws SQLException {
     // Since the test gets rid of all tables at the start of execution, I need to initialize the tables if they don't already exist
     DataManager.initializeTables();
     // The user input loop
@@ -20,7 +20,7 @@ public class Main {
   /**
    * This is the loop for getting user input and performing actions
    */
-  private static void inputLoop() {
+  private static void inputLoop() throws SQLException {
     // The while loop uses this boolean as the condition, so when this boolean is set to false, the loop terminates
     boolean shouldContinue = true;
     while (shouldContinue) {
@@ -34,6 +34,9 @@ public class Main {
           break;
         case "show":
           showMeals();
+          break;
+        case "plan":
+          planMeals();
           break;
         case "exit":
           shouldContinue = false;
@@ -65,31 +68,35 @@ public class Main {
    */
   private static void showMeals() {
     System.out.println("Which category do you want to print (breakfast, lunch, dinner)?");
-    System.out.println(DataManager.getMessage(MealUserInput.getValidCategory()));
+    System.out.println(DataManager.getMealsMessage(MealUserInput.getValidCategory()));
   }
 
   /**
    * Goes through the planning process to plan meals for each category for each day of the week
    */
   private static void planMeals() throws SQLException {
+    planDao.deleteAll();
     // Iterates through each of the days
     for (int i = 1; i <= 7; i++) {
+      String day;
+      day = getDayFromIteration(i);
+      System.out.println(day);
       // Iterates through each of the categories
-      for (int j = 1; j <= 7; j++) {
+      for (int j = 1; j <= 3; j++) {
         // Current day
-        String day = getDayFromIteration(i);
         // Current category
         String category = getCategoryFromIteration(j);
         // The meals from the current category
         String[] meals = DataManager.getMealsAlphabeticalOrder(category);
-        System.out.println(day);
         for (String meal : meals) System.out.println(meal);
         System.out.printf("Choose the %s for %s from the list above:%n", category.toLowerCase(), day);
         // Gets user input for a meal which is in the meals array
         String choice = MealUserInput.getValidMealUsingArray(meals);
         planDao.add(new Plan(category.toLowerCase(), choice, DataManager.getMealIDFromName(choice), day.toLowerCase()));
       }
+      System.out.printf("Yeah! We planned the meals for %s.%n%n", day);
     }
+    System.out.println(DataManager.getPlanMessage());
   }
 
   /**

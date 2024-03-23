@@ -23,16 +23,16 @@ public class DbPlanClient {
         dataSource.setPassword(PASS);
     }
 
-    public void run(String query) {
+    public void run(String query) throws SQLException {
         try (Connection connection = dataSource.getConnection();
          Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
 
-    public Plan select(String query) {
+    public Plan select(String query) throws SQLException {
         List<Plan> plans = selectForList(query);
         if (plans.size() == 1) {
             return plans.get(0);
@@ -43,7 +43,7 @@ public class DbPlanClient {
         }
     }
 
-    public List<Plan> selectForList(String query) {
+    public List<Plan> selectForList(String query) throws SQLException {
         List<Plan> plans = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
@@ -58,8 +58,7 @@ public class DbPlanClient {
             }
             return plans;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
-        return plans;
     }
 }

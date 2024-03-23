@@ -98,7 +98,7 @@ public class MealUserInput {
                     continue;
                 }
             }
-            String[] userInput = userInputString.split(", ");
+            String[] userInput = userInputString.split(", |,");
             for (String ingredient : userInput) {
                 Matcher lettersMatcher = lettersPattern.matcher(ingredient);
                 Matcher emptyMatcher = emptyPattern.matcher(ingredient);
@@ -125,7 +125,7 @@ public class MealUserInput {
                     return choice;
                 }
             }
-            System.out.println("This meal doesn't exist. Choose a meal from the list above.");
+            System.out.println("This meal doesn’t exist. Choose a meal from the list above.");
         }
     }
 }

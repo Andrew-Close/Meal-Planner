@@ -2,6 +2,7 @@ package mealplanner.meal.datamanager.legacydatamanager;
 
 import mealplanner.main.MealUserInput;
 import org.postgresql.ds.PGSimpleDataSource;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class manages the meal database. It lets you get data, insert data, modify data, and read data
+ * This class manages the meal database. It lets you get data, insert data, modify data, and read data, among other things
  */
 public class DataManager {
     /**
@@ -86,7 +87,7 @@ public class DataManager {
      * Returns all the data in the meals table in the specified category as a string for use with the show operation.
      * @param category the category in which only meals from that category are read
      */
-    public static String getMessage(String category) {
+    public static String getMealsMessage(String category) {
         StringBuilder message = new StringBuilder();
         // Keeps track of how many meals there are so the spacing is correct. If there is only one meal, there should not be any padding. If there is more than one meal, there should be padding
         int mealCounter = 0;
@@ -131,6 +132,33 @@ public class DataManager {
             message.insert(firstPaddingPointer, "\n");
             // Deletes the extra newline so there aren't two newlines at the end
             message.delete(message.length() - 1, message.length());
+        }
+        return message.toString();
+    }
+
+    /**
+     * Gets a String representation of the entire plan for the week for use with the plan operation
+     * @return the String representation of plan
+     */
+    public static String getPlanMessage() throws SQLException {
+        StringBuilder message = new StringBuilder();
+        try (Connection connection = connect();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM plan");
+            ResultSet result = statement.executeQuery()
+        ) {
+            result.next();
+            for (int i = 0; i < 7; i++) {
+                message.append(StringUtils.capitalize(result.getString("day"))).append("\n");
+                for (int j = 0; j < 3; j++) {
+                    message.append(StringUtils.capitalize(result.getString("category"))).append(": ").append(result.getString("meal")).append("\n");
+                    result.next();
+                }
+                message.append("\n");
+            }
+            // Deletes the trailing newline. The result is only one newline at the end rather than two
+            message.delete(message.length() - 1, message.length());
+        } catch (SQLException e) {
+            throw new SQLException(e);
         }
         return message.toString();
     }
@@ -201,7 +229,11 @@ public class DataManager {
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());
         }
-        return (String[]) meals.toArray();
+        String[] array = new String[meals.size()];
+        for (int i = 0; i < meals.size(); i++) {
+            array[i] = meals.get(i);
+        }
+        return array;
     }
 
     /**
@@ -211,12 +243,13 @@ public class DataManager {
      */
     public static int getMealIDFromName(String mealName) {
         String query = String.format(
-                "SELECT meal_id FROM meals WHERE UPPER(meal) = UPPER(%s)", mealName
+                "SELECT meal_id FROM meals WHERE UPPER(meal) = UPPER('%s')", mealName
         );
         try (Connection connection = connect();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet result = statement.executeQuery()
         ) {
+            result.next();
             return result.getInt("meal_id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
