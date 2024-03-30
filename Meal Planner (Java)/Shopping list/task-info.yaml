@@ -1497,9 +1497,25 @@ files:
         }
       }
     learner_created: true
+  - name: src/shoppinglist/test.txt
+    visible: true
+    learner_created: true
   - name: src/shoppinglist/shoppinglist.txt
     visible: true
     learner_created: true
+  - name: src/shoppinglist/list.txt
+    visible: true
+    learner_created: true
+  - name: src/shoppinglist/plan.txt
+    visible: true
+    learner_created: true
+  - name: plan.txt
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/25576#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
+    to continue learning.
+  time: "Sat, 30 Mar 2024 20:07:58 UTC"
 record: -1

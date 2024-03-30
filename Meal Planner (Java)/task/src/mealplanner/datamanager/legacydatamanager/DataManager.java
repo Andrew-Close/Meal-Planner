@@ -1,14 +1,15 @@
 package mealplanner.datamanager.legacydatamanager;
 
 import mealplanner.main.MealUserInput;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.apache.commons.lang3.StringUtils;
+import org.postgresql.ds.PGSimpleDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,17 @@ public class DataManager {
      * This enum is used to ensure that correct tables which exist are being chosen
      */
     public enum Tables {
-        MEALS, INGREDIENTS
+        MEALS("meals"), INGREDIENTS("ingredients"), PLAN("plan");
+
+        private final String name;
+
+        Tables(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     /**
@@ -238,11 +249,59 @@ public class DataManager {
     }
 
     /**
-     * Finds how many times each ingredient appears across all meals. For example, if two different meals have the ingredient bread, then the key bread on the map will have a value of 2
+     * Finds how many times each ingredient appears across all planned meals and returns a String representation of it. For example, if two different planned meals have the ingredient bread,
+     * then, in the internal map, the key bread on the map will have a value of 2, and on the String representation, it will look like "bread x2"
      * @return the map of frequencies
      */
-    public static Map<String, Integer> getIngredientFrequencies() {
+    public static String getIngredientFrequencies() throws SQLException {
+        StringBuilder string = new StringBuilder();
+        Map<String, Integer> map = new LinkedHashMap<>();
+        try (Connection connection = connect();
+             // Groups all the duplicate ingredients together and also selects how many of each ingredient there is
+            PreparedStatement planStatement = connection.prepareStatement("SELECT meal_id FROM plan");
+            ResultSet planResult = planStatement.executeQuery()
+        ) {
+            while (planResult.next()) {
+                try (PreparedStatement ingredientStatement = connection.prepareStatement(String.format("SELECT ingredient FROM ingredients WHERE meal_id = %d", planResult.getInt("meal_id")));
+                    ResultSet ingredientResult = ingredientStatement.executeQuery()
+                ) {
+                    while (ingredientResult.next()) {
+                        String ingredient = ingredientResult.getString("ingredient");
+                        if (map.containsKey(ingredient)) {
+                            map.replace(ingredient, map.get(ingredient) + 1);
+                        } else {
+                            map.put(ingredient, 1);
+                        }
+                    }
+                }
+            }
+        }
+        for (String ingredient : map.keySet()) {
+            string.append(ingredient);
+            // Only adds the frequency indicator is the frequency is greater than 1
+            if (map.get(ingredient) > 1) {
+                string.append(" x").append(map.get(ingredient));
+            }
+            string.append("\n");
+        }
+        // Deletes the trailing newline
+        string.delete(string.length() - 1, string.length());
+        return string.toString();
+    }
 
+    public static boolean tableIsEmpty(Tables table) throws SQLException {
+        String query = String.format("SELECT * FROM %s", table.getName());
+        try (Connection connection = connect();
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet result = statement.executeQuery()
+        ) {
+            if (result.next()) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
+        return true;
     }
 
     /**
